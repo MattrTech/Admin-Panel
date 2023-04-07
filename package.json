@@ -1,0 +1,36 @@
+{
+  "name": "mattr-admin-panel-v1",
+  "version": "1.0.0",
+  "description": "This is a ecommerce admin panel made by mattr to support various ecommerce platform sites.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "keywords": [
+    "mattr"
+  ],
+  "author": "Abhinav Maharana, Gaurang Pant",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "flatted": "^3.2.7",
+    "helmet": "^6.0.1",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "razorpay": "^2.8.6",
+    "uuid": "^9.0.0",
+    "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
