@@ -2,10 +2,14 @@ const app = require('./app');
 const colors = require("colors");
 
 const dotenv = require('dotenv');
+const connectDatabase = require("./config/database")
 
 // Config
 
 dotenv.config({path:"backend/config/config.env"});
+
+// Connecting to ddatabase
+connectDatabase();
 
 // Initializing PORT
 const PORT = process.env.PORT || 5000;
