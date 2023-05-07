@@ -42,4 +42,46 @@ exports.createUser = asyncHandler(async (req,res, next) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-})
+});
+
+// @desc Update
+// @route PUT /api/v1/user/:userId
+exports.updateUserById = asyncHandler(async (req,res, next) => {
+    try {
+       let user = await User.findById(req.params.id); 
+       if (!user) {
+        return next(new ErrorResponse("User not Found", 404));
+       }
+       user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+       });
+       res.status(200).json({
+            success: true,
+            message: "User Created Successfully",
+            data: user,
+       });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+
+// @desc Delete
+// @route DELETE /api/v1/user/:userId
+exports.deleteUserById = asyncHandler(async (req,res,next) => {
+    try {
+        let user = await User.findById(req.params.id);
+        
+        if (!user) {
+            return next(new ErrorResponse("User not Found", 404));
+        }
+
+        user = await User.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({ success: true, message: "User Deleted Successfully" });
+
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
