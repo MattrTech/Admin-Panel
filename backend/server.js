@@ -2,11 +2,11 @@ const app = require('./app');
 const colors = require("colors");
 
 const dotenv = require('dotenv');
-const connectDatabase = require("./config/database")
+const connectDatabase = require("./utils/database")
 
 // Config
 
-dotenv.config({path:"backend/config/config.env"});
+dotenv.config({path:"config.env"});
 
 // Connecting to ddatabase
 connectDatabase();
