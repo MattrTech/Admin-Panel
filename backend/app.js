@@ -32,5 +32,7 @@ app.use('/api/v1/order', order);
 app.use('/api/v1/cart', cart);
 app.use('/api/v1/coupon', coupon);
 app.use('/api/v1/giftcard', giftcard); 
+app.use('/api/v1/razorpay', giftcard); 
+
 
 module.exports = app;
