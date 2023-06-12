@@ -18,6 +18,12 @@ app.use('/', helmet());
 app.use('/', cors());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/healthcheck', (req, res) => {
+	res.json({
+		uptime: process.uptime(),
+		timestamp: new Date()
+	})
+})
 //Route Imports
 const product = require('./routes/productRoute');
 const user = require('./routes/userRoute');
