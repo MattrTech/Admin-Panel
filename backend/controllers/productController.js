@@ -70,4 +70,61 @@ exports.deleteProduct = asyncHandler (async(req,res) => {
     }
 });
 
+// Add a user review to a product
+exports.addReview = async (req, res) => {
+    try {
+      const { productId, userId, rating, comment } = req.body;
+  
+      const product = await Product.findById(productId);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      const review = {
+        user: userId,
+        rating,
+        comment
+      };
+  
+      product.reviews.push(review);
+  
+      const updatedProduct = await product.save();
+  
+      res.status(201).json(updatedProduct);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+// Update a user review for a product
+exports.updateReview = async (req, res) => {
+    try {
+      const { productId, reviewId, rating, comment } = req.body;
+  
+      const product = await Product.findById(productId);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      const review = product.reviews.id(reviewId);
+  
+      if (!review) {
+        return res.status(404).json({ message: 'Review not found' });
+      }
+  
+      review.rating = rating;
+      review.comment = comment;
+  
+      const updatedProduct = await product.save();
+  
+      res.status(200).json(updatedProduct);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
 
