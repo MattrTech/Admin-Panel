@@ -1,13 +1,13 @@
 const express = require('express');
 const { getCartByUserId, addProductToCart, removeProductFromCart, clearCart } = require('../controllers/cartController');
-
+const { protect } = require("../middlewares/auth");
 const router = express.Router();
 
 // Get cart by user ID
 router.route('/:userId').get(getCartByUserId);
 
 // Add product to cart
-router.route('/add').post(addProductToCart);
+router.route('/add').post(protect, addProductToCart);
 
 // Remove product from cart
 router.route('/remove').post(removeProductFromCart);

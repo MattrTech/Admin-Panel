@@ -28,15 +28,12 @@ exports.getCartByUserId = asyncHandler( async (req,res) => {
 exports.addProductToCart = asyncHandler(async (req,res) => {
     try {
         const { productId, quantity } = req.body;
-        console.log(res.locals.user);
-        console.log(res.locals.id);
         const userId = new mongoose.Types.ObjectId(req.user.id)
         let cart = await Cart.findOne({ user: userId });
 
         if (!cart) {
             cart = new Cart({ user: userId, products: [] });
         }
-
         // Check if product already exists in the cart
         const existingProduct = cart.products.find((item) => item.product.toString() === productId);
 
@@ -45,7 +42,7 @@ exports.addProductToCart = asyncHandler(async (req,res) => {
         } else {
             cart.products.push({ product: productId, quantity });
         }
-
+        console.log(existingProduct, cart, productId, { product: productId, quantity }, req.body)
         const updatedCart = await cart.save();
 
         res.status(200).json(updatedCart);
