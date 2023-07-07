@@ -28,6 +28,7 @@ exports.getCartByUserId = asyncHandler( async (req,res) => {
 exports.addProductToCart = asyncHandler(async (req,res) => {
     try {
         const { productId, quantity } = req.body;
+        console.log(res.locals.user);
         const userId = new mongoose.Types.ObjectId(res.locals.user.id)
         let cart = await Cart.findOne({ user: userId });
 
