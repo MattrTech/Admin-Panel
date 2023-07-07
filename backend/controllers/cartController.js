@@ -29,7 +29,7 @@ exports.addProductToCart = asyncHandler(async (req,res) => {
     try {
         const { productId, quantity } = req.body;
         console.log(res.locals.user);
-        console.log(req.user);
+        console.log(res.locals.id);
         const userId = new mongoose.Types.ObjectId(req.user.id)
         let cart = await Cart.findOne({ user: userId });
 
