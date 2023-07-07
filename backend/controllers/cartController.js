@@ -29,7 +29,8 @@ exports.addProductToCart = asyncHandler(async (req,res) => {
     try {
         const { productId, quantity } = req.body;
         console.log(res.locals.user);
-        const userId = new mongoose.Types.ObjectId(res.locals.user.id)
+        console.log(req.user);
+        const userId = new mongoose.Types.ObjectId(req.user.id)
         let cart = await Cart.findOne({ user: userId });
 
         if (!cart) {
@@ -50,7 +51,7 @@ exports.addProductToCart = asyncHandler(async (req,res) => {
         res.status(200).json(updatedCart);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ message: "Something went wrong", error });
     }
 });
 
