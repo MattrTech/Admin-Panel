@@ -1,6 +1,7 @@
 const Cart = require('../models/cartModel');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
+const mongoose = require("mongoose");
 
 // @desc Get cart by user ID
 // @route 
@@ -26,8 +27,8 @@ exports.getCartByUserId = asyncHandler( async (req,res) => {
 
 exports.addProductToCart = asyncHandler(async (req,res) => {
     try {
-        const { userId, productId, quantity } = req.body;
-
+        const { productId, quantity } = req.body;
+        const userId = new mongoose.Types.ObjectId(res.locals.user.id)
         let cart = await Cart.findOne({ user: userId });
 
         if (!cart) {
