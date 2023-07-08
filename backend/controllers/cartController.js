@@ -44,7 +44,7 @@ exports.addProductToCart = asyncHandler(async (req,res) => {
         const existingProduct = cart.products.find((item) => item.product.toString() === productId);
 
         if (existingProduct) {
-            existingProduct.quantity += quantity;
+            existingProduct.quantity =Number(existingProduct.quantity) + Number(quantity);
         } else {
             cart.products.push({ product: productId, quantity, size });
         }
