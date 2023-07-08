@@ -18,6 +18,11 @@ const cartSchema = new mongoose.Schema({
                 required: true,
                 default: 1,
             },
+            size: {
+                type: Number,
+                required: false,
+                default: 1,
+            },
         },
     ],
 });

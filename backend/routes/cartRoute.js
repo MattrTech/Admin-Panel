@@ -4,7 +4,7 @@ const { protect } = require("../middlewares/auth");
 const router = express.Router();
 
 // Get cart by user ID
-router.route('/:userId').get(getCartByUserId);
+router.route('/').get(protect, getCartByUserId);
 
 // Add product to cart
 router.route('/add').post(protect, addProductToCart);
