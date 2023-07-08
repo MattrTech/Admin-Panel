@@ -81,7 +81,7 @@ exports.paymentCature = asyncHandler(async (req,res,next) => {
 
         const placeOrder = await Order.create({ ...order, ...req.body });
         await Cart.deleteMany({
-            userId: new mongoose.Types.ObjectId(res.locals.user.id),
+            user: new mongoose.Types.ObjectId(res.locals.user.id),
         });
         return res.status(200).json({
             success: true,
