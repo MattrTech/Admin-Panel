@@ -8,6 +8,7 @@ const Order = require("../models/orderModel");
 const crypto = require("crypto");
 const RazorOrders = require("../models/razorOrderModel");
 const mongoose = require("mongoose");
+const Product = require('../models/productModel');
 
 const razorInstance = new Razorpay({
     key_id: process.env.RAZOR_PAY_ID ?? '',
@@ -18,34 +19,15 @@ const razorInstance = new Razorpay({
 exports.getOrderDetails = asyncHandler(async (req,res,next) => {
     const { address, city, pincode, phone, country, email, name } = req.body;
     const description = `Name : ${name}, emailID: ${email}, phone : ${phone}, address: ${address}, city: ${city}, pincode: ${pincode}, country: ${country}`;
-    const cartItems = await Cart.aggregate([
-        { $match: { userId: new mongoose.Types.ObjectId(res.locals.user.id) } },
-        {
-            $lookup: {
-                from: "products",
-                localField: "itemId",
-                foreignField: "_id",
-                as: "product",
-            },
-        },
-        {
-            $unwind: {
-                path: "$product",
-                preserveNullAndEmptyArrays: false, // optional
-            },
-        },
-        {
-            $replaceRoot: {
-                newRoot: {
-                    $mergeObjects: ["$$ROOT", "$product"],
-                },
-            },
-        },
-        { $project: { product: 0, userId: 0, variations: 0 } },
-    ]);
+    const cart = await Cart.findOne({ user: res.locals.user.id });
+    const cardData = [];
+    for(let j =0; j< cart.products.length; j++){
+        cardData.push({product: await Product.findById(cart.products[j].product), quantity: cart.products[j].quantity,  size: cart.products[j].size})
+    }
+
     let totPrice = 0;
-    cartItems.forEach((e) => {
-        totPrice = totPrice + parseInt(e.total_price) * parseInt(e.quantity);
+    cardData.forEach((e) => {
+        totPrice = totPrice + parseInt(e.product.total_price) * parseInt(e.quantity);
     });
     const amount = Math.round(totPrice * 1) * 100;
     const options = {
@@ -58,7 +40,7 @@ exports.getOrderDetails = asyncHandler(async (req,res,next) => {
     const data = await RazorOrders.create({
         ...order,
         notes: req.body,
-        cartItems,
+        cardData,
         created_at: new Date(),
     });
     res.status(200).json({ success: true, order });
