@@ -10,7 +10,7 @@ router.route('/').get(protect, getCartByUserId);
 router.route('/add').post(protect, addProductToCart);
 
 // Remove product from cart
-router.route('/remove').post(removeProductFromCart);
+router.route('/remove').post(protect, removeProductFromCart);
 
 // Clear cart
 router.route('/clear').post(clearCart);

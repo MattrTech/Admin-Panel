@@ -63,8 +63,8 @@ exports.addProductToCart = asyncHandler(async (req,res) => {
 
 exports.removeProductFromCart = asyncHandler(async (req,res) => {
     try {
-        const { userId, productId } = req.body;
-
+        const {productId } = req.body;
+        const userId = res.locals.user.id;
         const cart = await Cart.findOne({ user: userId });
 
         if (!cart) {
