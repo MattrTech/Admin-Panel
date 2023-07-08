@@ -32,6 +32,7 @@ const cart = require('./routes/cartRoute');
 const coupon = require('./routes/couponRoute');
 const giftcard = require('./routes/giftcardRoute');
 const auth = require('./routes/authRoute');
+const rzr = require('./routes/razorpayRoute');
 
 app.use('/api/v1/product', product);
 app.use('/api/v1/user', user);
@@ -39,7 +40,7 @@ app.use('/api/v1/order', order);
 app.use('/api/v1/cart', cart);
 app.use('/api/v1/coupon', coupon);
 app.use('/api/v1/giftcard', giftcard); 
-app.use('/api/v1/razorpay', giftcard); 
+app.use('/api/v1/razorpay', rzr); 
 app.use('/api/v1/auth', auth); 
 
 

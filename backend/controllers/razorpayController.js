@@ -9,6 +9,7 @@ const crypto = require("crypto");
 const RazorOrders = require("../models/razorOrderModel");
 const mongoose = require("mongoose");
 const Product = require('../models/productModel');
+dotenv.config({path:"config.env"});
 
 const razorInstance = new Razorpay({
     key_id: process.env.RAZOR_PAY_ID ?? '',
@@ -18,29 +19,32 @@ const razorInstance = new Razorpay({
 // @desc Get order details
 exports.getOrderDetails = asyncHandler(async (req,res,next) => {
     const { address, city, pincode, phone, country, email, name } = req.body;
+    console.log(req.body, "s")
     const description = `Name : ${name}, emailID: ${email}, phone : ${phone}, address: ${address}, city: ${city}, pincode: ${pincode}, country: ${country}`;
     const cart = await Cart.findOne({ user: res.locals.user.id });
     const cardData = [];
     for(let j =0; j< cart.products.length; j++){
         cardData.push({product: await Product.findById(cart.products[j].product), quantity: cart.products[j].quantity,  size: cart.products[j].size})
     }
-
     let totPrice = 0;
     cardData.forEach((e) => {
         totPrice = totPrice + parseInt(e.product.total_price) * parseInt(e.quantity);
     });
-    const amount = Math.round(totPrice * 1) * 100;
+    const amount = Math.round(totPrice * 1) * 85;
     const options = {
         amount: amount,
         currency: "INR",
         receipt: uuidv4(),
         notes: { ...req.body },
     };
+
     const order = await razorInstance.orders.create(options);
+
+    console.log(order, "sss")
     const data = await RazorOrders.create({
         ...order,
         notes: req.body,
-        cardData,
+        cartItems: cardData,
         created_at: new Date(),
     });
     res.status(200).json({ success: true, order });
@@ -62,6 +66,12 @@ exports.paymentCature = asyncHandler(async (req,res,next) => {
     if (generated_signature === signature) {
         order.amount_paid = order?.amount;
         order.amount_due = 0;
+        order.paymentMethod = '-'
+        order.shippingCountry = order?.notes?.country ?? "-"
+        order.shippingZip = order?.notes?.pincode ?? ""
+        order.shippingAddress = order?.notes?.address ?? ""
+        order.shippingCity = order?.notes?.city ?? ""
+        order.user = res.locals.user.id
         req.body.orderDetails = order?._id;
         req.body.notes = order?.notes;
         req.body.address = order?.notes.address;
@@ -80,6 +90,6 @@ exports.paymentCature = asyncHandler(async (req,res,next) => {
         });
     }
 
-    return next(new ErrorResponse(`Payment not Authorized`, 500));
+    return res.status(500).json({success: false, message: "Payment failed"})
 })
 

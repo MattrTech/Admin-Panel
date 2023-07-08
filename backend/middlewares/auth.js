@@ -31,6 +31,7 @@ exports.protect = asyncHandler(async (req,res,next) => {
         res.locals.id = decoded.id;
         next();
     } catch (error) {
+        console.log(error)
         return next(
             new ErrorResponse(`Not authorized to access this route.`, 401)
         );
