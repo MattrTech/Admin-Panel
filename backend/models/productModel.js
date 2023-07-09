@@ -30,7 +30,7 @@ const ProductSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['Heels', 'Clothing', 'Food', 'Books', 'Other'],
+        enum: ['Heels', 'Shoes', 'Flats', 'Accessories', 'Other'],
         required: true,
     },
     total_price: {
