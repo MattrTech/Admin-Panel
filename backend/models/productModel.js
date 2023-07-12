@@ -14,10 +14,11 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
     },
     variations: {
-        // color: {
-        //   type: [String],
-        //   enum: ["White", "Red", "Black", "Blue", "Yellow"],
-        // },
+        color: {
+          type: [String],
+          default: "user.jpg",
+          enum: ["White", "Red", "Black", "Blue", "Yellow"],
+        },
         size: {
             type: mongoose.Schema.Types.Mixed,
         },
