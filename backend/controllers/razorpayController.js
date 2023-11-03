@@ -10,6 +10,7 @@ const RazorOrders = require("../models/razorOrderModel");
 const mongoose = require("mongoose");
 const Product = require('../models/productModel');
 dotenv.config({path:"config.env"});
+const Coupon = require('../models/couponModel');
 
 const razorInstance = new Razorpay({
     key_id: process.env.RAZOR_PAY_ID ?? '',
@@ -18,7 +19,7 @@ const razorInstance = new Razorpay({
 
 // @desc Get order details
 exports.getOrderDetails = asyncHandler(async (req,res,next) => {
-    const { address, city, pincode, phone, country, email, name } = req.body;
+    const { address, city, pincode, phone, country, email, name, coupon = "" } = req.body;
     console.log(req.body, "s")
     const description = `Name : ${name}, emailID: ${email}, phone : ${phone}, address: ${address}, city: ${city}, pincode: ${pincode}, country: ${country}`;
     const cart = await Cart.findOne({ user: res.locals.user.id });
@@ -30,9 +31,20 @@ exports.getOrderDetails = asyncHandler(async (req,res,next) => {
     cardData.forEach((e) => {
         totPrice = totPrice + parseInt(e.product.total_price) * parseInt(e.quantity);
     });
-    const amount = Math.round(totPrice * 1) * 85;
+    let amount = Math.round(totPrice * 1);
+    if(coupon.length > 0){
+        const data = await Coupon.findOne({code: coupon});
+        if(data){
+            amount = amount - (amount * data?.discount / 100);
+        }
+        else {
+            const defaultDiscount = await Coupon.findOne({code: "DEFAULT_DISCOUNT_INTERNAL"});
+            amount = amount - (amount * defaultDiscount?.discount / 100);
+        }
+        console.log("gho", data, amount, totPrice)
+    }
     const options = {
-        amount: amount,
+        amount: Math.round(amount) * 100,
         currency: "INR",
         receipt: uuidv4(),
         notes: { ...req.body },
